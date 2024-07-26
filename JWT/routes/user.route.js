@@ -7,6 +7,9 @@ const router = express.Router();
 //Public Routes
 router.post("/", UserController.userRegistration);
 router.get("/", UserController.userLogin);
+router.post("/send-reset-password-email", UserController.resetEmailandPasswordEmail);
+router.post("/reset-password/:id/:token", UserController.userPasswordReset);
+
 
 //Route level middleware
 router.use('/changepassword', checkUserAuth);
