@@ -53,12 +53,12 @@ This is a Node.js application that provides JWT (JSON Web Token) based authentic
 git clone https://github.com/Wali-dev/JWT-Complete-Authentication
 ```
 
-3. Install dependencies:
+2. Install dependencies:
 ```bash
 npm install
 
  ```
-4. Create a `.env` file in the root directory and add the following environment variables:
+3. Create a `.env` file in the root directory and add the following environment variables:
 ```bash
 jwt_key=<your-jwt-secret-key>
 EMAIL_FROM=<your-email-address>
@@ -70,11 +70,11 @@ EMAIL_PASS=<your-email-password>
 ```
 ## Usage
 
-5. To start the server in development mode:
+4. To start the server in development mode:
 ```bash
 npm run dev
 ```
-6. To start the server in production mode:
+5. To start the server in production mode:
 ```bash
 npm start
 ```
