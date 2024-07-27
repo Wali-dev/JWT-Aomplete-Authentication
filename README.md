@@ -26,4 +26,5 @@ This is a Node.js application that provides JWT (JSON Web Token) based authentic
 
 ## Installation
 
-1. Clone the repository:
+1. Clone the repository: ```bash git clone <repository-url> ```
+   
