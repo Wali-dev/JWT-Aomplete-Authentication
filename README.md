@@ -24,16 +24,6 @@ This is a Node.js application that provides JWT (JSON Web Token) based authentic
 - Node.js (v14 or later recommended)
 - MongoDB
 
-## Installation
-
-1. Clone the repository: ```bash git clone <repository-url> ```
-2. Install dependencies: ```bash npm install ```
-3. Create a `.env` file in the root directory and add the following environment variables:
-    ```bash Here's a README file for your application:
-markdownCopy# JWT Authentication API
-
-This is a Node.js application that provides JWT (JSON Web Token) based authentication API. It includes user registration, login, password change, and password reset functionalities.
-
 ## Features
 
 - User Registration
@@ -103,7 +93,9 @@ EMAIL_PASS=<your-email-password>
 ## Authentication
 
 This API uses JWT for authentication. To access protected routes, include the JWT token in the Authorization header of your request:
-```bash Authorization: Bearer <your-jwt-token>```
+```bash 
+Authorization: Bearer <your-jwt-token>
+```
 
 ## Error Handling
 
