@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import transporter from '../config/emailConfig.js';
+
 dotenv.config();
 const JWT_KEY = process.env.jwt_key;
 
@@ -10,14 +11,14 @@ const JWT_KEY = process.env.jwt_key;
 
 
 class UserController {
-    static userRegistration = async (req, res) => {
+    static userRegistration = async (req, res, next) => {
         try {
             // const user = await userRegistrationService(name, email, password, password_confirmation, tc);
             // res.send(user)
             const { name, email, password, password_confirmation, tc } = req.body;
             const user = await UserModel.findOne({ email: email });
             if (user) {
-                res.send({ "status": "failed", "message": "Email already used" })
+                throw new Error("Email already used");
             }
             else {
                 if (name && email && password && password_confirmation && tc) {
@@ -39,24 +40,23 @@ class UserController {
                             res.status(201).send({ "status": "Success", "message": "Registration Successfull", "token": token })
 
                         } catch (error) {
-                            console.log(error);
-                            res.send({ "status": "failed", "message": "Unable to register" })
+                            throw new Error("Unable to register");
                         }
                     }
                     else {
-                        res.send({ "status": "failed", "message": "Password must match" })
+                        throw new Error("Password must match");
                     }
                 }
                 else {
-                    res.send({ "status": "failed", "message": "All fields are rewuired" })
+                    throw new Error("All fields are required");
                 }
             }
-        } catch (error) {
-            res.send({ "status": "failed", "message": "Unable to register" })
+        } catch (err) {
+            next(err);
         }
     }
 
-    static userLogin = async (req, res) => {
+    static userLogin = async (req, res, next) => {
         try {
             const { email, password } = req.body;
             if (email && password) {
@@ -69,17 +69,16 @@ class UserController {
                         const token = jwt.sign({ userID: user._id }, JWT_KEY, { expiresIn: '1d' });
                         res.send({ "status": "Success", "message": "Login is Succesfull", "token": token });
                     } else {
-                        res.send({ "status": "failed", "message": "Email or password does not match" })
+                        throw new Error("Email or password does not match");
                     }
                 } else {
-                    res.send({ "status": "failed", "message": "User do not exists" })
+                    throw new Error("User do not exists");
                 }
             } else {
-                res.send({ "status": "failed", "message": "Email and Password both are required" })
+                throw new Error("Email and Password both are required");
             }
         } catch (error) {
-            console.log(error)
-            res.send({ "status": "failed", "message": "Unable to login" })
+            next(error);
         }
     }
 
@@ -97,54 +96,59 @@ class UserController {
                     })
                     res.send({ "status": "Success", "message": "Passwords changed succesfully" })
                 } else {
-                    res.send({ "status": "failed", "message": "Passwords must match" })
+                    throw new Error("Passwords must match");
                 }
             } else {
-                res.send({ "status": "failed", "message": "Both fields are required" })
+                throw new Error("Both fields are required");
             }
         } catch (error) {
-            console.log(error)
+            next(error);
         }
 
     }
 
-    static getLoggedUser = async (req, res) => {
+    static getLoggedUser = async (req, res, next) => {
         try {
             res.send({ "user": req.user })
         } catch (error) {
-            console.log(error)
+            next(error);
         }
     }
 
-    static resetEmailandPasswordEmail = async (req, res) => {
-        const { email } = req.body;
-        if (email) {
-            const user = await UserModel.findOne({ email: email });
-            if (user) {
-                const secret = user._id + JWT_KEY;
-                const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '30m' });
-                const link = `http://127.0.0.1:3000/api/user/reset/${user._id}/${token}`
+    static resetEmailandPasswordEmail = async (req, res, next) => {
+        try {
+            const { email } = req.body;
+            if (email) {
+                const user = await UserModel.findOne({ email: email });
+                if (user) {
+                    const secret = user._id + JWT_KEY;
+                    const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '30m' });
+                    const link = `http://127.0.0.1:3000/api/user/reset/${user._id}/${token}`
 
-                //SEND EMAIL
-                let info = transporter.sendMail({
-                    from: process.env.EMAIL_FROM,
-                    to: user.email,
-                    subject: "Reset Password",
-                    html: `<a>Click herer to reset password ${link}</a>`
-                })
-                res.send({ "status": "Success", "message": "Reset link is sent to your email, Please check", "info": info })
+                    //SEND EMAIL
+                    let info = transporter.sendMail({
+                        from: process.env.EMAIL_FROM,
+                        to: user.email,
+                        subject: "Reset Password",
+                        html: `<a>Click herer to reset password ${link}</a>`
+                    })
+                    res.send({ "status": "Success", "message": "Reset link is sent to your email, Please check", "info": info })
+                } else {
+                    throw new Error("Email not found");
+                }
+
             } else {
-                res.send({ "status": "failed", "message": "Email not found" })
-
+                throw new Error("Email is required");
             }
 
-        } else {
-            res.send({ "status": "failed", "message": "Email is required" })
+        } catch (error) {
+            next(error);
+
         }
 
     }
 
-    static userPasswordReset = async (req, res) => {
+    static userPasswordReset = async (req, res, next) => {
         const { password, password_confirmation } = req.body;
         const { id, token } = req.params;
         const user = await UserModel.findById(id);
@@ -163,14 +167,15 @@ class UserController {
                     res.send({ "status": "Success", "message": "Password reset Successfully" })
 
                 } else {
-                    res.send({ "status": "Failed", "message": "Passwords must match" })
+                    throw new Error("Passwords must match");
                 }
 
             } else {
-                res.send({ "status": "Failed", "message": "All fields are required" })
+                throw new Error("All fields are required");
             }
 
         } catch (error) {
+            next(error);
 
         }
     }

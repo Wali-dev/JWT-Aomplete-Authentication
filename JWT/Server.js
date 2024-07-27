@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/connectDB.js';
 import UserRouter from './routes/user.route.js';
+import { errorHandler } from "./middleware/error.middleware.js";
+
 dotenv.config();
 const app = express();
 const port = process.env.port;
@@ -20,8 +22,8 @@ app.use(express.json());
 //LOAD ROUTES
 app.use("/api/user", UserRouter);
 
-
-
+//GLOBAL ERROR HANDLER
+app.use(errorHandler);
 
 
 app.listen(port, () => {
