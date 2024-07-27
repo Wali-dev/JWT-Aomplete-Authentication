@@ -71,9 +71,13 @@ EMAIL_PASS=<your-email-password>
 ## Usage
 
 4. To start the server in development mode:
-```bash npm run dev```
-5. To start the server in production mode:
-```bash npm start```
+```bash
+npm run dev
+```
+6. To start the server in production mode:
+```bash
+npm start
+```
 
 
 ## API Endpoints
