@@ -50,7 +50,7 @@ This is a Node.js application that provides JWT (JSON Web Token) based authentic
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Wali-dev/JWT-Complete-Authentication
 ```
 
 3. Install dependencies:
