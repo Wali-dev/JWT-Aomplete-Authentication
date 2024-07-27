@@ -59,17 +59,25 @@ This is a Node.js application that provides JWT (JSON Web Token) based authentic
 ## Installation
 
 1. Clone the repository:
-```bash git clone <repository-url> ```
+```bash
+git clone <repository-url>
+```
 
-2. Install dependencies:
-``` bash npm install ```
-3. Create a `.env` file in the root directory and add the following environment variables:
-``` bash jwt_key=<your-jwt-secret-key>
+3. Install dependencies:
+```bash
+npm install
+
+ ```
+5. Create a `.env` file in the root directory and add the following environment variables:
+```bash
+jwt_key=<your-jwt-secret-key>
 EMAIL_FROM=<your-email-address>
 EMAIL_HOST=<your-email-host>
 EMAIL_PORT=<your-email-port>
 EMAIL_USER=<your-email-username>
-EMAIL_PASS=<your-email-password> ```
+EMAIL_PASS=<your-email-password>
+
+```
 ## Usage
 
 4. To start the server in development mode:
